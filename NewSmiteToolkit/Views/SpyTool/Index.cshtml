@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "The SMITE Spy Tool!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<br />
+
+<p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
+    ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
+    Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
+    Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
+</p>
+
+<br />
+
+<form action="SpyTool/Results" method="post" style="margin: 0 auto; text-align: center" >
+
+    <div class="form-group">
+        <label for="username-input">Username:</label><br />
+        <input type="text" class="form-control" id="username-input" name="username" placeholder="Enter Username/Gamertag" style="color: black">
+    </div>
+
+    <div class="form-group">
+        <label for="platform-select">Platform:</label><br />
+        <select class="form-control" id="platform-select" name="platform" style="color: black">
+            <option selected disabled>--Please choose an option--</option>
+            <option>Steam</option>
+            <option>Xbox</option>
+            <option>PSN</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="gamemode-select">Gamemode:</label><br />
+        <select class="form-control" id="gamemode-select" name="gamemode" style="color: black">
+            <option selected disabled>--Please choose an option--</option>
+            <option>Conquest</option>
+            <option>Joust</option>
+            <option>Arena</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="minute-input">Current Time In Game (In Minutes):</label><br />
+        <input type="number" class="form-control" id="minute-input" name="minutesBehind" placeholder="Enter 0 if Game Just Began" style="color: black">
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+
+<br />
+

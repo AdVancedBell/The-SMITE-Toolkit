@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+
+<style>
+
+    html {
+        /*        min-height: 100%;*/
+        position: relative;
+    }
+
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 96%;
+        background-color: white;
+        height: 1px;
+    }
+
+    body {
+        background-image: url('https://www.thecollector.com/wp-content/uploads/2020/01/image3-16.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    .extend-bottom {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: auto;
+        background-color: rgba(16, 16, 16, 0.95);
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        border-top: solid 1px white;
+    }
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - The SMITE Toolkit</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" style="border-bottom: solid 2px rgba(255,255,255,0.25)">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("The SMITE Toolkit", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("All Characters", "Index", "God")</li>
+                    <li>@Html.ActionLink("SMITE Spy Tool", "Index", "SpyTool")</li>
+                    <li>@Html.ActionLink("Popular Guides", "Guides", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content extend-bottom" style="background: rgba(16, 16, 16, 0.90); color: white;">
+        @RenderBody()
+        <hr />
+    </div>
+
+    <footer class="footer">
+        <div class="container" style="color: #9d9d9d">&copy; @DateTime.Now.Year - The SMITE Toolkit</div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<NewSmiteToolkit.Models.God>
+
+@{
+    ViewBag.Title = "All Characters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @*@Html.ActionLink("Load From API", "LoadAllGodsIntoDatabase")*@
+</p>
+
+@*@for (int i = 0; i < Model.Count(); i += 4)
+{
+<div class="row" style="padding: 5px">
+    @for (int j = 0; j < 4; j++)
+    {
+        if (Model.Count() > i + j)
+        {
+            <div class="col-lg-3" style="text-align:center" >
+                <img src="@Model.ElementAt(i+j).godIcon_URL" alt="@Model.ElementAt(i+j).Name" style="height: 120px" />
+            </div>
+        }
+    }
+</div>
+}*@
+
+<ul>
+    @foreach (var item in Model)
+    {
+    <li>
+        @Html.ActionLink(item.Name, "Details", new { id=item.id })
+        @*@Html.DisplayFor(modelItem => item.Name)*@
+    </li>
+    }
+</ul>
+

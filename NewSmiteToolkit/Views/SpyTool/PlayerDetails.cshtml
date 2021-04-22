@@ -1,0 +1,179 @@
+﻿@model NewSmiteToolkit.Models.MatchPlayer
+
+@{
+    ViewBag.Title = "PlayerDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.playerName</h2>
+
+<div>
+    <h4>MatchPlayer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Account_Gods_Played)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Account_Gods_Played)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Account_Level)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Account_Level)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GodId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GodId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GodLevel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GodLevel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GodName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GodName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mastery_Level)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mastery_Level)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Match)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Match)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Queue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Queue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rank_Stat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rank_Stat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SkinId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SkinId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mapGame)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mapGame)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.playerCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.playerCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.playerId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.playerId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.playerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.playerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.playerRegion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.playerRegion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ret_msg)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ret_msg)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.taskForce)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.taskForce)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tierLosses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tierLosses)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tierWins)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tierWins)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

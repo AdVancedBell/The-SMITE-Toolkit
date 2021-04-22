@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SmiteToolkit.Models.Menuitem">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAACAAAAAAAAAAAgA=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmiteToolkit.Models.Rankitem">
+    <Position X="7.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAACAAAAAAAAAAAgA=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SmiteToolkit.Models.AbilityDescription">
+    <Position X="4.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAACCQAAAAAAAgAAAQAgA=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="menuitems" />
+      <Property Name="rankitems" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SmiteToolkit.Models.AbilityRoot">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAgA=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="itemDescription" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SmiteToolkit.Models.Ability">
+    <Position X="4.5" Y="1.75" Width="1.5" />
+    <AssociationLine Name="Description" Type="SmiteToolkit.Models.AbilityRoot">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.11" Y="0.126" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAgAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Description" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SmiteToolkit.Models.God">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <AssociationLine Name="Ability_1" Type="SmiteToolkit.Models.Ability" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="1.875" />
+        <Point X="4.5" Y="1.875" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Ability_2" Type="SmiteToolkit.Models.Ability" FixedFromPoint="true">
+      <Path>
+        <Point X="2.75" Y="2.187" />
+        <Point X="4.5" Y="2.187" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Ability_3" Type="SmiteToolkit.Models.Ability" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="2.5" />
+        <Point X="4.5" Y="2.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Ability_4" Type="SmiteToolkit.Models.Ability" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="2.813" />
+        <Point X="4.5" Y="2.813" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Ability_5" Type="SmiteToolkit.Models.Ability" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="3.125" />
+        <Point X="4.5" Y="3.125" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>BIAIWAQCEQKBAEAQAAQAAASJAyEggsICAQAFoGAOJgE=</HashCode>
+      <FileName>Models\God.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Ability_1" />
+      <Property Name="Ability_2" />
+      <Property Name="Ability_3" />
+      <Property Name="Ability_4" />
+      <Property Name="Ability_5" />
+      <Property Name="basicAttack" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

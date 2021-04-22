@@ -1,0 +1,175 @@
+﻿@using NewSmiteToolkit.Models
+@using Newtonsoft.Json
+@model IEnumerable<MatchPlayer>
+
+@{
+    ViewBag.Title = "Results";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<MatchPlayer> team1 = Model.Where(p => p.taskForce.Equals("1")).ToList();
+    List<MatchPlayer> team2 = Model.Where(p => p.taskForce.Equals("2")).ToList();
+}
+
+<style>
+    .table-hover tbody tr:hover td {
+        background-color: #f5f5f5;
+        color: black
+    }
+
+    .team-header {
+        text-align: center;
+        font-size: 2rem;
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    .team-footer {
+        border-radius: 0px 0px 10px 10px;
+    }
+
+    .team1{
+        background-color: firebrick;
+    }
+
+    .team2{
+        background-color: dodgerblue;
+    }
+</style>
+
+<h2>Results</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="team-header team1" scope="colgroup" colspan="7">
+                Team 1
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Account_Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GodName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rank_Stat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.playerCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.playerName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in team1)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account_Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GodName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rank_Stat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tier)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.playerCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.playerName)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "PlayerDetails", new { playerJson = JsonConvert.SerializeObject(item) })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th class="team1 team-footer" colspan="7" scope="colgroup">
+            </th>
+        </tr>
+    </tfoot>
+</table>
+
+<br />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th class="team2 team-header" scope="colgroup" colspan="7">
+                Team 2
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Account_Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GodName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rank_Stat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.playerCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.playerName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in team2)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account_Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GodName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rank_Stat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tier)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.playerCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.playerName)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "PlayerDetails", new { playerJson = JsonConvert.SerializeObject(item) })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th class="team2 team-footer" colspan="7" scope="colgroup">
+            </th>
+        </tr>
+    </tfoot>
+</table>
