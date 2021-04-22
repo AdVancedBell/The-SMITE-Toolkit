@@ -186,7 +186,9 @@
     <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\God.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Match.cs" />
     <Compile Include="Models\MatchMetadata.cs" />
     <Compile Include="Models\MatchPlayer.cs" />
     <Compile Include="Models\Player.cs" />

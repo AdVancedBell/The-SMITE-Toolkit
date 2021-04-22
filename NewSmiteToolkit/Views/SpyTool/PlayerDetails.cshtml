@@ -1,179 +1,240 @@
-﻿@model NewSmiteToolkit.Models.MatchPlayer
+﻿@using NewSmiteToolkit.Utilities
+@using NewSmiteToolkit.Models
+@using NewSmiteToolkit.Constants
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+
+@model NewSmiteToolkit.Models.MatchPlayer
+
 
 @{
     ViewBag.Title = "PlayerDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // TESTING ONLY : REMOVE ME
+    if (Model.playerId == null)
+    {
+        Model.playerName = "Go Mallardd";
+        Model.playerId = "709955972";
+        Model.GodName = "Athena";
+    }
+
+    // get general stats
+    string requestURI = SpyToolUtils.GetRequestURI("getplayerachievements", authParams: true, parameters: Model.playerId);
+    string serverResponse = SpyToolUtils.GetServerResponse(requestURI);
+
+    JObject jsonObject = JObject.Parse(serverResponse);
+
+    string kills = jsonObject["PlayerKills"].ToString();
+    string deaths = jsonObject["Deaths"].ToString();
+    string assists = jsonObject["AssistedKills"].ToString();
+    double kd_val = double.Parse(kills) / Math.Max(1, double.Parse(deaths));
+    string kd_str = String.Format(kd_val % 1 == 0 ? "{0:0}" : "{0:0.00}", kd_val);
+    double kda_val = (double.Parse(kills) + double.Parse(assists)) / Math.Max(1, double.Parse(deaths));
+    string kda_str = String.Format(kda_val % 1 == 0 ? "{0:0}" : "{0:0.00}", kda_val);
+
+    // get list of all items
+    requestURI = SpyToolUtils.GetRequestURI("getitems", authParams: true, parameters: LanguageCode.English.GetId());
+    serverResponse = SpyToolUtils.GetServerResponse(requestURI);
+
+    List<Item> items = JsonConvert.DeserializeObject<List<Item>>(serverResponse);
+
+    // get match history
+    requestURI = SpyToolUtils.GetRequestURI("getmatchhistory", authParams: true, parameters: Model.playerId);
+    serverResponse = SpyToolUtils.GetServerResponse(requestURI);
+
+    List<Match> matches = JsonConvert.DeserializeObject<List<Match>>(serverResponse);
+
+    // generate list of common items
+    List<Match> matchesPlayedWithCurrentGod = matches.Where(m => m.God.Equals(Model.GodName)).ToList();
+    Dictionary<Item, int> commonItems = new Dictionary<Item, int>();
+    foreach (var match in matchesPlayedWithCurrentGod)
+    {
+        foreach (string itemstr in match.items)
+        {
+            if (itemstr == null || itemstr.IsEmpty())
+            {
+                continue;
+            }
+
+            Item item = items.First(i => i.DeviceName.Equals(itemstr));
+
+            if (commonItems.ContainsKey(item))
+            {
+                commonItems[item] += 1;
+            }
+            else
+            {
+                List<Item> keys = commonItems.Keys.ToList();
+                List<Item> childrenItems = keys.Where(i => i.ItemId.Equals(item.ChildItemId)).ToList();
+                if (childrenItems.Count > 0)
+                {
+                    foreach (var i in childrenItems)
+                    {
+                        commonItems.Remove(i);
+                    }
+                }
+                keys = commonItems.Keys.ToList();
+                List<Item> rootItems = keys.Where(i => i.ItemId.Equals(item.RootItemId)).ToList();
+                if (rootItems.Count > 0)
+                {
+                    foreach (var i in rootItems)
+                    {
+                        commonItems.Remove(i);
+                    }
+                }
+                keys = commonItems.Keys.ToList();
+                if (keys.Any(i => i.ChildItemId.Equals(item.ItemId) || i.RootItemId.Equals(item.ItemId)))
+                {
+                    continue;
+                }
+
+                commonItems.Add(item, 1);
+            }
+        }
+    }
 }
+
+
+<style>
+    .table-hover tbody tr:hover td {
+                background-color: #f5f5f5;
+        color: black
+            }
+
+    .table-header {
+        text-align: center;
+        font-size: 2rem;
+        border-radius: 10px 10px 0px 0px;
+    }
+</style>
 
 <h2>@Model.playerName</h2>
 
 <div>
     <h4>MatchPlayer</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Account_Gods_Played)
-        </dt>
+    <div class="container" style="text-align: center">
+        <div class="row">
+            <div class="col-md-4">
+                Kills: @kills
+            </div>
+            <div class="col-md-4">
+                Deaths: @deaths
+            </div>
+            <div class="col-md-4">
+                Assists: @assists
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                K/D Ratio: @kd_str
+            </div>
+            <div class="col-md-4">
+                K/D/A Ratio: @kda_str
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Account_Gods_Played)
-        </dd>
+        <hr />
+        <h4>@Model.playerName's Common Items Built on @Model.GodName</h4>
+        <h6> Out of the last @matchesPlayedWithCurrentGod.Count / @matches.Count matches played as @Model.GodName</h6>
+        <hr />
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Account_Level)
-        </dt>
+        <div class="row">
+            @foreach (KeyValuePair<Item, int> kvp in commonItems)
+            {
+                <div class="col-md-4">
+                    <a data-toggle="tooltip" data-delay="" title="yes">
+                        <img src="@kvp.Key.itemIcon_URL" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                    </a>
+                    <br />
+                    -- @kvp.Key.DeviceName --
+                </div>
+            }
+        </div>
+        <br />
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Account_Level)
-        </dd>
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Show Recent Match History
+    </button>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.GodId)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.GodId)
-        </dd>
+    <div class="collapse" id="collapseOne">
+        <hr />
+        <br />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="table-header" scope="colgroup" colspan="8" style="background-color: darkcyan">
+                        Recent Matches
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        God Played
+                    </th>
+                    <th>
+                        Item 1
+                    </th>
+                    <th>
+                        Item 2
+                    </th>
+                    <th>
+                        Item 3
+                    </th>
+                    <th>
+                        Item 4
+                    </th>
+                    <th>
+                        Item 5
+                    </th>
+                    <th>
+                        Item 6
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int count = 1; }
+    @foreach (var match in matches)
+    {
+                    <tr>
+                        <td>
+                            @count
+                        </td>
+                        <td>
+                            @match.God
+                        </td>
+                        <td>
+                            @match.Item_1
+                        </td>
+                        <td>
+                            @match.Item_2
+                        </td>
+                        <td>
+                            @match.Item_3
+                        </td>
+                        <td>
+                            @match.Item_4
+                        </td>
+                        <td>
+                            @match.Item_5
+                        </td>
+                        <td>
+                            @match.Item_6
+                        </td>
+                    </tr>
+                    count += 1;
+    }
+            </tbody>
+        </table>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.GodLevel)
-        </dt>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.GodLevel)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.GodName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GodName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Mastery_Level)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Mastery_Level)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Match)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Match)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Queue)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Queue)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rank_Stat)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Rank_Stat)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.SkinId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SkinId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Tier)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Tier)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mapGame)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mapGame)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.playerCreated)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.playerCreated)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.playerId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.playerId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.playerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.playerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.playerRegion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.playerRegion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ret_msg)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ret_msg)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.taskForce)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.taskForce)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.tierLosses)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.tierLosses)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.tierWins)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.tierWins)
-        </dd>
-
-    </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    @Html.ActionLink("Back to List", "Index")
+    @*@Html.ActionLink("Back to List", "Index")*@
 </p>

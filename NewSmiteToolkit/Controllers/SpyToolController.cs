@@ -29,6 +29,39 @@ namespace NewSmiteToolkit.Controllers
             ViewBag.Message = JsonConvert.SerializeObject(new { username, platform, gamemode, minutesBehind });
             // TEMP ^^^
 
+            bool testFromMem = true;
+            List<MatchPlayer> matchPlayers = new List<MatchPlayer>();
+            if (testFromMem)
+            {
+                //// save to disk for later testing : TESTING ONLY
+                //responseFromServer = SpyToolUtils.GetServerResponse(requestURI);
+                //string path = Server.MapPath("~/Logs/TestMatchPlayerDetails.txt");
+                //if (!System.IO.File.Exists(path))
+                //{
+                //    Debug.WriteLine("Could not find TestMatchPlayerDetails file to save to");
+                //}
+                //else
+                //{
+                //    System.IO.File.WriteAllText(path, responseFromServer);
+                //}
+
+                // Load from disk : TESTING
+                string path = Server.MapPath("~/Logs/TestMatchPlayerDetails.txt");
+                //List<MatchPlayer> matchPlayers = new List<MatchPlayer>();
+
+                if (!System.IO.File.Exists(path))
+                {
+                    Debug.WriteLine($"Could not find credentials file to load from ({path})");
+                }
+                else
+                {
+                    string jsonPlayerInfo = System.IO.File.ReadAllText(path);
+
+                    matchPlayers = JsonConvert.DeserializeObject<List<MatchPlayer>>(jsonPlayerInfo);
+                    return View(matchPlayers);
+                }
+            }
+
             // validate access to API
             string requestURI = SpyToolUtils.GetRequestURI("ping");
             string responseFromServer = SpyToolUtils.GetServerResponse(requestURI);
@@ -76,34 +109,7 @@ namespace NewSmiteToolkit.Controllers
             requestURI = SpyToolUtils.GetRequestURI("getmatchplayerdetails", authParams: true, matchId);
             responseFromServer = SpyToolUtils.GetServerResponse(requestURI);
 
-            List<MatchPlayer> matchPlayers = JsonConvert.DeserializeObject<List<MatchPlayer>>(responseFromServer);
-
-            //// save to disk for later testing : TESTING ONLY
-            //responseFromServer = SpyToolUtils.GetServerResponse(requestURI);
-            //string path = Server.MapPath("~/Logs/TestMatchPlayerDetails.txt");
-            //if (!System.IO.File.Exists(path))
-            //{
-            //    Debug.WriteLine("Could not find TestMatchPlayerDetails file to save to");
-            //}
-            //else
-            //{
-            //    System.IO.File.WriteAllText(path, responseFromServer);
-            //}
-
-            //// Load from disk : TESTING
-            //string path = Server.MapPath("~/Logs/TestMatchPlayerDetails.txt");
-            //List<MatchPlayer> matchPlayers = new List<MatchPlayer>();
-
-            //if (!System.IO.File.Exists(path))
-            //{
-            //    Debug.WriteLine($"Could not find credentials file to load from ({path})");
-            //}
-            //else
-            //{
-            //    string jsonPlayerInfo = System.IO.File.ReadAllText(path);
-
-            //    matchPlayers = JsonConvert.DeserializeObject<List<MatchPlayer>>(jsonPlayerInfo);
-            //}
+            /*List<MatchPlayer>*/ matchPlayers = JsonConvert.DeserializeObject<List<MatchPlayer>>(responseFromServer);
 
             return View(matchPlayers);
         }
@@ -112,7 +118,12 @@ namespace NewSmiteToolkit.Controllers
         {
             ViewBag.Message = playerJson;
 
-            MatchPlayer matchPlayer = JsonConvert.DeserializeObject<MatchPlayer>(playerJson);
+            MatchPlayer matchPlayer = new MatchPlayer();
+
+            if (playerJson != null)
+            {
+                matchPlayer = JsonConvert.DeserializeObject<MatchPlayer>(playerJson);
+            }
 
             return View(matchPlayer);
         }
