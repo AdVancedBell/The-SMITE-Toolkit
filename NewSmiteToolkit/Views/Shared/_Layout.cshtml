@@ -49,6 +49,37 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
+    @* - ENABLE POPOVERS - *@
+    @*<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    @*<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
+    <script type="text/javascript">
+        //Initialize popover with jQuery
+        $(document).ready(function () {
+            $('.popovers').popover({
+                html: true,
+                content: function () {
+                    var content = $(this).attr("data-popover-content");
+                    return $(content).children(".popover-body").html();
+                },
+                title: function () {
+                    var title = $(this).attr("data-popover-content");
+                    return $(title).children(".popover-heading").html();
+                },
+
+                placement: function (context, source) {
+
+                    if ($(source).offset().top - $(window).scrollTop() < 280) {
+                        return "bottom";
+                    }
+
+                    return "top";
+                }
+
+            });
+        });
+    </script>
+
 </head>
 
 <body>
@@ -78,7 +109,6 @@
 
     <div class="container body-content extend-bottom" style="background: rgba(16, 16, 16, 0.90); color: white;">
         @RenderBody()
-        <hr />
     </div>
 
     <footer class="footer">

@@ -3,7 +3,7 @@
 @model IEnumerable<MatchPlayer>
 
 @{
-    ViewBag.Title = "Results";
+    ViewBag.Title = "Spy Tool Results";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     List<MatchPlayer> team1 = Model.Where(p => p.taskForce.Equals("1")).ToList();
@@ -35,7 +35,8 @@
     }
 </style>
 
-<h2>Results</h2>
+<h2>Success! Match Details</h2>
+<br />
 
 <table class="table table-hover">
     <thead>

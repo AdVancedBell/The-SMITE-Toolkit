@@ -6,9 +6,8 @@
 
 @model NewSmiteToolkit.Models.MatchPlayer
 
-
 @{
-    ViewBag.Title = "PlayerDetails";
+    ViewBag.Title = "Spy Tool Player Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     // TESTING ONLY : REMOVE ME
@@ -17,17 +16,22 @@
         Model.playerName = "Go Mallardd";
         Model.playerId = "709955972";
         Model.GodName = "Athena";
+        Model.Queue = Gamemode.Joust.GetId();
+        Model.Account_Gods_Played = "x";
+        Model.Account_Level = "x";
+        Model.playerCreated = DateTime.Now.ToString();
+        Model.playerRegion = "x";
     }
 
     // get general stats
     string requestURI = SpyToolUtils.GetRequestURI("getplayerachievements", authParams: true, parameters: Model.playerId);
     string serverResponse = SpyToolUtils.GetServerResponse(requestURI);
 
-    JObject jsonObject = JObject.Parse(serverResponse);
+    JObject achievements = JObject.Parse(serverResponse);
 
-    string kills = jsonObject["PlayerKills"].ToString();
-    string deaths = jsonObject["Deaths"].ToString();
-    string assists = jsonObject["AssistedKills"].ToString();
+    string kills = achievements["PlayerKills"].ToString();
+    string deaths = achievements["Deaths"].ToString();
+    string assists = achievements["AssistedKills"].ToString();
     double kd_val = double.Parse(kills) / Math.Max(1, double.Parse(deaths));
     string kd_str = String.Format(kd_val % 1 == 0 ? "{0:0}" : "{0:0.00}", kd_val);
     double kda_val = (double.Parse(kills) + double.Parse(assists)) / Math.Max(1, double.Parse(deaths));
@@ -38,16 +42,114 @@
     serverResponse = SpyToolUtils.GetServerResponse(requestURI);
 
     List<Item> items = JsonConvert.DeserializeObject<List<Item>>(serverResponse);
+    //var tmp = items[0].Menuitems[0].description;
 
     // get match history
     requestURI = SpyToolUtils.GetRequestURI("getmatchhistory", authParams: true, parameters: Model.playerId);
     serverResponse = SpyToolUtils.GetServerResponse(requestURI);
-
     List<Match> matches = JsonConvert.DeserializeObject<List<Match>>(serverResponse);
+
+    // Get recent match averages
+    double avgDamage = 0;
+    double avgStructureDamage = 0;
+    double avgDamageTakenMagical = 0;
+    double avgDamageTakenPhysical = 0;
+    double avgDamageTaken = 0;
+    double avgDamageMitigated = 0;
+    double avgKills = 0;
+    double avgAssists = 0;
+    double avgDeaths = 0;
+    double avgMaxKillingSpree = 0;
+    double avgMaxMultiKill = 0;
+    double avgDistanceTraveled = 0;
+    double avgWardsPlaced = 0;
+    double avgHealing = 0;
+    double avgSelfHealing = 0;
+    double avgCreeps = 0;
+
+    double wins = 0;
+    double losses = 0;
+    double surrenders = 0;
+
+    foreach (var m in matches)
+    {
+        avgDamage += double.Parse(m.Damage);
+        avgStructureDamage += double.Parse(m.Damage_Structure);
+        avgDamageTakenMagical += double.Parse(m.Damage_Taken_Magical);
+        avgDamageTakenPhysical += double.Parse(m.Damage_Taken_Physical);
+        avgDamageTaken += double.Parse(m.Damage_Taken);
+        avgDamageMitigated += double.Parse(m.Damage_Mitigated);
+        avgKills += double.Parse(m.Kills);
+        avgAssists += double.Parse(m.Assists);
+        avgDeaths += double.Parse(m.Deaths);
+        avgMaxKillingSpree += double.Parse(m.Killing_Spree);
+        avgMaxMultiKill += double.Parse(m.Multi_kill_Max);
+        avgDistanceTraveled += double.Parse(m.Distance_Traveled);
+        avgWardsPlaced += double.Parse(m.Wards_Placed);
+        avgHealing += double.Parse(m.Healing);
+        avgSelfHealing += double.Parse(m.Healing_Player_Self);
+        avgCreeps += double.Parse(m.Creeps);
+
+        if (m.Win_Status.Equals("Win"))
+        {
+            wins += 1;
+        }
+        else
+        {
+            losses += 1;
+        }
+
+        if (m.Surrendered.Equals("1"))
+        {
+            surrenders += 1;
+        }
+    }
+
+    avgDamage /= Math.Max(1, matches.Count);
+    avgStructureDamage /= Math.Max(1, matches.Count);
+    avgDamageTakenMagical /= Math.Max(1, matches.Count);
+    avgDamageTakenPhysical /= Math.Max(1, matches.Count);
+    avgDamageTaken /= Math.Max(1, matches.Count);
+    avgDamageMitigated /= Math.Max(1, matches.Count);
+    avgKills /= Math.Max(1, matches.Count);
+    avgAssists /= Math.Max(1, matches.Count);
+    avgDeaths /= Math.Max(1, matches.Count);
+    avgMaxKillingSpree /= Math.Max(1, matches.Count);
+    avgMaxMultiKill /= Math.Max(1, matches.Count);
+    avgDistanceTraveled /= Math.Max(1, matches.Count);
+    avgWardsPlaced /= Math.Max(1, matches.Count);
+    avgHealing /= Math.Max(1, matches.Count);
+    avgSelfHealing /= Math.Max(1, matches.Count);
+    avgCreeps /= Math.Max(1, matches.Count);
+
+    double avgKd = avgKills / avgDeaths;
+    string avgKd_str = String.Format(avgKd % 1 == 0 ? "{0:0}" : "{0:0.00}", avgKd);
+    double avgKda = (avgKills + avgAssists) / avgDeaths;
+    string avgKda_str = String.Format(avgKda % 1 == 0 ? "{0:0}" : "{0:0.00}", avgKda);
+    double recentWl = wins / losses;
+    string recentWl_str = String.Format(recentWl % 1 == 0 ? "{0:0}" : "{0:0.00}", recentWl);
+
+    string avgDamage_str = String.Format(avgDamage % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDamage);
+    string avgStructureDamage_str = String.Format(avgStructureDamage % 1 == 0 ? "{0:0}" : "{0:0.00}", avgStructureDamage);
+    string avgDamageTakenMagical_str = String.Format(avgDamageTakenMagical % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDamageTakenMagical);
+    string avgDamageTakenPhysical_str = String.Format(avgDamageTakenPhysical % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDamageTakenPhysical);
+    string avgDamageTaken_str = String.Format(avgDamageTaken % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDamageTaken);
+    string avgDamageMitigated_str = String.Format(avgDamageMitigated % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDamageMitigated);
+    string avgKills_str = String.Format(avgKills % 1 == 0 ? "{0:0}" : "{0:0.00}", avgKills);
+    string avgAssists_str = String.Format(avgAssists % 1 == 0 ? "{0:0}" : "{0:0.00}", avgAssists);
+    string avgDeaths_str = String.Format(avgDeaths % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDeaths);
+    string avgMaxKillingSpree_str = String.Format(avgMaxKillingSpree % 1 == 0 ? "{0:0}" : "{0:0.00}", avgMaxKillingSpree);
+    string avgMaxMultiKill_str = String.Format(avgMaxMultiKill % 1 == 0 ? "{0:0}" : "{0:0.00}", avgMaxMultiKill);
+    string avgDistanceTraveled_str = String.Format(avgDistanceTraveled % 1 == 0 ? "{0:0}" : "{0:0.00}", avgDistanceTraveled);
+    string avgWardsPlaced_str = String.Format(avgWardsPlaced % 1 == 0 ? "{0:0}" : "{0:0.00}", avgWardsPlaced);
+    string avgHealing_str = String.Format(avgHealing % 1 == 0 ? "{0:0}" : "{0:0.00}", avgHealing);
+    string avgSelfHealing_str = String.Format(avgSelfHealing % 1 == 0 ? "{0:0}" : "{0:0.00}", avgSelfHealing);
+    string avgCreeps_str = String.Format(avgCreeps % 1 == 0 ? "{0:0}" : "{0:0.00}", avgCreeps);
+
 
     // generate list of common items
     List<Match> matchesPlayedWithCurrentGod = matches.Where(m => m.God.Equals(Model.GodName)).ToList();
-    Dictionary<Item, int> commonItems = new Dictionary<Item, int>();
+    Dictionary<Item, double> commonItems = new Dictionary<Item, double>();
     foreach (var match in matchesPlayedWithCurrentGod)
     {
         foreach (string itemstr in match.items)
@@ -93,148 +195,429 @@
             }
         }
     }
-}
 
+    //get list of GodQueueStats
+
+    requestURI = SpyToolUtils.GetRequestURI("getqueuestats", true, Model.playerId, Model.Queue);
+    serverResponse = SpyToolUtils.GetServerResponse(requestURI);
+    List<GodQueueStats> godQueueStatList = JsonConvert.DeserializeObject<List<GodQueueStats>>(serverResponse);
+    godQueueStatList.OrderBy(s => s.Matches).ToList();
+}
 
 <style>
     .table-hover tbody tr:hover td {
-                background-color: #f5f5f5;
+        background-color: #f5f5f5;
         color: black
-            }
+    }
+
+    th {
+        text-align: center;
+        font-size: 1.5rem;
+    }
 
     .table-header {
         text-align: center;
         font-size: 2rem;
         border-radius: 10px 10px 0px 0px;
     }
+
+    .popover-title {
+        color: black;
+        font-weight: bold;
+    }
+
+    .popover-content {
+        color: black;
+    }
+
+    button[aria-expanded=true] .glyphicon-chevron-down {
+        display: none;
+    }
+
+    button[aria-expanded=false] .glyphicon-chevron-up {
+        display: none;
+    }
 </style>
 
-<h2>@Model.playerName</h2>
+<h2>Spying on @Model.playerName ... </h2>
 
 <div>
-    <h4>MatchPlayer</h4>
-    <hr />
     <div class="container" style="text-align: center">
-        <div class="row">
-            <div class="col-md-4">
-                Kills: @kills
-            </div>
-            <div class="col-md-4">
-                Deaths: @deaths
-            </div>
-            <div class="col-md-4">
-                Assists: @assists
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                K/D Ratio: @kd_str
-            </div>
-            <div class="col-md-4">
-                K/D/A Ratio: @kda_str
-            </div>
-        </div>
 
-        <hr />
-        <h4>@Model.playerName's Common Items Built on @Model.GodName</h4>
-        <h6> Out of the last @matchesPlayedWithCurrentGod.Count / @matches.Count matches played as @Model.GodName</h6>
-        <hr />
+        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#generalInfo" aria-expanded="false">
+            <b>@Model.playerName's General Info and Stats</b>
+            <span style="vertical-align: middle">
+                <i class="glyphicon glyphicon-chevron-down"></i>
+                <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+        </button>
 
-        <div class="row">
-            @foreach (KeyValuePair<Item, int> kvp in commonItems)
-            {
-                <div class="col-md-4">
-                    <a data-toggle="tooltip" data-delay="" title="yes">
-                        <img src="@kvp.Key.itemIcon_URL" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
-                    </a>
-                    <br />
-                    -- @kvp.Key.DeviceName --
+        <div class="row collapse" id="generalInfo">
+            <hr />
+            <h4><b>- Basic Account Info -</b></h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Account Level</b>: @Model.Account_Level
                 </div>
+                <div class="col-md-3">
+                    <b>Account Created</b>: @DateTime.Parse(Model.playerCreated).ToShortDateString()
+                </div>
+                <div class="col-md-3">
+                    <b>Region</b>: @Model.playerRegion
+                </div>
+                <div class="col-md-3">
+                    <b>Gods Mastered</b>: @Model.Account_Gods_Played
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Deaths</b>: @deaths
+                </div>
+                <div class="col-md-3">
+                    <b>Assists</b>: @assists
+                </div>
+                <div class="col-md-3">
+                    <b>K/D Ratio</b>: @kd_str
+                </div>
+                <div class="col-md-3">
+                    <b>K/D/A Ratio</b>: @kda_str
+                </div>
+            </div>
+            <hr />
+            <h4><b>- Multi-Kills and Killing Sprees -</b></h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <b>Kills</b>: @kills
+                </div>
+                <div class="col-md-2">
+                    <b>Double Kills</b>: @achievements["DoubleKills"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Triple Kills</b>: @achievements["TripleKills"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Quadra Kills</b>: @achievements["QuadraKills"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Penta Kills</b>: @achievements["PentaKills"].ToString()
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <b>Killing Spree</b>: @achievements["KillingSpree"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Rampage Spree</b>: @achievements["RampageSpree"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Unstoppable Spree</b>: @achievements["UnstoppableSpree"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Divine Spree</b>: @achievements["DivineSpree"].ToString()
+                </div>
+                <div class="col-md-2">
+                    <b>Godlike Spree</b>: @achievements["GodLikeSpree"].ToString()
+                </div>
+            </div>
+            <hr />
+            <h4><b>- Average Stats of Last @matches.Count Matches -</b></h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <b>Kills</b>: @avgKills_str
+                </div>
+                <div class="col-md-2">
+                    <b>Assists</b>: @avgAssists_str
+                </div>
+                <div class="col-md-2">
+                    <b>Deaths</b>: @avgDeaths_str
+                </div>
+                <div class="col-md-2">
+                    <b>K/D</b>: @avgKd_str
+                </div>
+                <div class="col-md-2">
+                    <b>K/D/A</b>:  @avgKda_str
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1">
+                    <b>Wins</b>: @wins
+                </div>
+                <div class="col-md-2">
+                    <b>Losses</b>: @losses
+                </div>
+                <div class="col-md-2">
+                    <b>W/L</b>: @recentWl_str
+                </div>
+                <div class="col-md-2">
+                    <b>Surrenders</b>: @surrenders
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Damage Taken</b>:<br /> @avgDamageTaken_str
+                </div>
+                <div class="col-md-3">
+                    <b>Magical Damage Taken</b>:<br /> @avgDamageTakenMagical_str
+                </div>
+                <div class="col-md-3">
+                    <b>Physical Damage Taken</b>:<br /> @avgDamageTakenPhysical_str
+                </div>
+                <div class="col-md-3">
+                    <b>Damage Mitigated</b>:<br /> @avgDamageMitigated_str
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Player Damage</b>:<br /> @avgDamage_str
+                </div>
+                <div class="col-md-3">
+                    <b>Structure Damage</b>:<br /> @avgStructureDamage_str
+                </div>
+                <div class="col-md-3">
+                    <b>Max Killing Spree</b>:<br /> @avgMaxKillingSpree_str
+                </div>
+                <div class="col-md-3">
+                    <b>Max Multi-Kill</b>:<br /> @avgMaxMultiKill_str
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Player Healing</b>:<br /> @avgHealing_str
+                </div>
+                <div class="col-md-3">
+                    <b>Self Healing</b>:<br /> @avgSelfHealing_str
+                </div>
+                <div class="col-md-3">
+                    <b>Distance Travelled</b>:<br /> @avgDistanceTraveled_str
+                </div>
+                <div class="col-md-3">
+                    <b>Minions Killed</b>:<br /> @avgCreeps_str
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#commonItems" aria-expanded="false">
+            <b>@Model.playerName's Commonly Built Items on @Model.GodName</b>
+            <span style="vertical-align: middle">
+                <i class="glyphicon glyphicon-chevron-down"></i>
+                <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+        </button>
+
+        <div class="row collapse" id="commonItems">
+            @{
+                int contentIdInt = 1;
+                double itemPercentage = 0;
+                string itemPercentageString = "";
+
+                List<KeyValuePair<Item, double>> commonItemsSorted = commonItems.ToList();
+                commonItemsSorted.Sort((a, b) => b.Value.CompareTo(a.Value));
+
+            }
+            <hr />
+            <h4><b>- Out of the last @matches.Count matches, @Model.playerName played @matchesPlayedWithCurrentGod.Count matches as @Model.GodName -</b></h4>
+            <hr />
+            @foreach (KeyValuePair<Item, double> kvp in commonItemsSorted)
+            {
+                Item i = kvp.Key;
+                string contentId = $"a{contentIdInt}";
+                itemPercentage = kvp.Value / matchesPlayedWithCurrentGod.Count;
+                itemPercentageString = String.Format(itemPercentage % 1 == 0 ? "{0:0}" : "{0:0.00}", itemPercentage * 100);
+
+                <!-- Content for Image Popover -->
+                <div class="hidden" id=@contentId>
+                    <div class="popover-heading">
+                        @i.DeviceName
+                    </div>
+                    <div class="popover-body">
+                        @i.ItemDescription.description
+                        <ul>
+                            @foreach (var m in i.ItemDescription.menuitems)
+                            {
+                                <li>
+                                    @m.description @m.value
+                                </li>
+                            }
+                        </ul>
+                        @i.ItemDescription.secondaryDescription
+                    </div>
+                </div>
+
+                <div class="col-md-4" style="padding-bottom:12px">
+                    <img src="@i.itemIcon_URL" class="popovers" data-toggle="popover" data-trigger="hover" data-popover-content="#@contentId" data-placement="auto top" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                    <br />
+                    -- @i.DeviceName --<br />
+                    - Built @itemPercentageString% of the time -
+                </div>
+
+                contentIdInt += 1;
             }
         </div>
-        <br />
-    </div>
 
-    <button class="btn btn-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Show Recent Match History
-    </button>
-
-
-    <div class="collapse" id="collapseOne">
         <hr />
-        <br />
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th class="table-header" scope="colgroup" colspan="8" style="background-color: darkcyan">
-                        Recent Matches
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        #
-                    </th>
-                    <th>
-                        God Played
-                    </th>
-                    <th>
-                        Item 1
-                    </th>
-                    <th>
-                        Item 2
-                    </th>
-                    <th>
-                        Item 3
-                    </th>
-                    <th>
-                        Item 4
-                    </th>
-                    <th>
-                        Item 5
-                    </th>
-                    <th>
-                        Item 6
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @{ int count = 1; }
-    @foreach (var match in matches)
-    {
+
+        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#queueStats" aria-expanded="false">
+            <b>@Model.playerName's God Stats in @((Gamemode)int.Parse(Model.Queue))</b>
+            <span style="vertical-align: middle">
+                <i class="glyphicon glyphicon-chevron-down"></i>
+                <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+        </button>
+
+        <div class="row collapse" id="queueStats" style="padding-right: 30px">
+            <br />
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <td>
-                            @count
-                        </td>
+                        <th>God Name</th>
+                        <th>Wins</th>
+                        <th>Losses</th>
+                        <th>W/L</th>
+                        <th>Kills</th>
+                        <th>Deaths</th>
+                        <th>Assists</th>
+                        <th>K/D</th>
+                        <th>K/D/A</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stat in godQueueStatList)
+                    {
+                        <tr>
+                            <td>
+                                @stat.God
+                            </td>
+                            <td>
+                                @stat.Wins
+                            </td>
+                            <td>
+                                @stat.Losses
+                            </td>
+                            <td>
+                                @stat.wl_str
+                            </td>
+                            <td>
+                                @stat.Kills
+                            </td>
+                            <td>
+                                @stat.Deaths
+                            </td>
+                            <td>
+                                @stat.Assists
+                            </td>
+                            <td>
+                                @stat.kd_str
+                            </td>
+                            <td>
+                                @stat.kda_str
+                            </td>
+                            <td>
+                                @stat.Minutes minutes
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#recentMatches" aria-expanded="false">
+            <b>@Model.playerName's @matches.Count Most Recent Matches</b>
+            <span style="vertical-align: middle">
+                <i class="glyphicon glyphicon-chevron-down"></i>
+                <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+        </button>
+
+        <div class="row collapse" id="recentMatches" style="padding-right: 30px; text-align:center">
+            <br />
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            God Played
+                        </th>
+                        <th>
+                            K/D/A
+                        </th>
+                        <th>
+                            Player Damage
+                        </th>
+                        <th>
+                            Damage Taken
+                        </th>
+                        <th>
+                            Damage Mitigated
+                        </th>
+                        <th>
+                            Player Healing
+                        </th>
+                        <th>
+                            Self Healing
+                        </th>
+                        <th>
+                            Wards Placed
+                        </th>
+                        <th>
+                            Duration
+                        </th>
+                        <th>
+                            Result
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var match in matches)
+                    {
+                    <tr>
                         <td>
                             @match.God
                         </td>
                         <td>
-                            @match.Item_1
+                            @match.Kills/@match.Deaths/@match.Assists
                         </td>
                         <td>
-                            @match.Item_2
+                            @match.Damage
                         </td>
                         <td>
-                            @match.Item_3
+                            @match.Damage_Taken
                         </td>
                         <td>
-                            @match.Item_4
+                            @match.Damage_Mitigated
                         </td>
                         <td>
-                            @match.Item_5
+                            @match.Healing
                         </td>
                         <td>
-                            @match.Item_6
+                            @match.Healing_Player_Self
+                        </td>
+                        <td>
+                            @match.Wards_Placed
+                        </td>
+                        <td>
+                            @TimeSpan.FromSeconds(double.Parse(match.Time_In_Match_Seconds)).ToString(@"hh\:mm\:ss")
+                        </td>
+                        <td>
+                            @match.Win_Status 
                         </td>
                     </tr>
-                    count += 1;
-    }
-            </tbody>
-        </table>
-
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-
+    <br /><br />
 </div>
-<p>
-    @*@Html.ActionLink("Back to List", "Index")*@
-</p>

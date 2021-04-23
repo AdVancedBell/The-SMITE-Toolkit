@@ -21,7 +21,18 @@ namespace NewSmiteToolkit.Models
         public string God { get; set; }
         public string Map_Game { get; set; }    // game mode
 
+        public string Creeps { get; set; }
+        public string Distance_Traveled { get; set; }
+        public string Healing { get; set; }
+        public string Healing_Player_Self { get; set; }
+        public string Time_In_Match_Seconds { get; set; }
+
         public string Damage{ get; set; }
+        public string Damage_Structure { get; set; }
+        public string Damage_Taken { get; set; }
+        public string Damage_Taken_Magical { get; set; }
+        public string Damage_Taken_Physical { get; set; }
+        public string Damage_Mitigated { get; set; }
         public string Kills { get; set; }
         public string Assists { get; set; }
         public string Deaths { get; set; }

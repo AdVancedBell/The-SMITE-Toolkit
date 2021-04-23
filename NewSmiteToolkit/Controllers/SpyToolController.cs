@@ -58,6 +58,7 @@ namespace NewSmiteToolkit.Controllers
                     string jsonPlayerInfo = System.IO.File.ReadAllText(path);
 
                     matchPlayers = JsonConvert.DeserializeObject<List<MatchPlayer>>(jsonPlayerInfo);
+
                     return View(matchPlayers);
                 }
             }

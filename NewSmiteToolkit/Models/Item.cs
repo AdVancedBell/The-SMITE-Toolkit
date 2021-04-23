@@ -5,6 +5,13 @@ using System.Web;
 
 namespace NewSmiteToolkit.Models
 {
+    public class ItemDescription
+    {
+        public string description { get; set; }
+        public string secondaryDescription { get; set; }
+        public List<Menuitem> menuitems { get; set; }
+    }
+
     public class Item
     {
         /*
@@ -17,9 +24,7 @@ namespace NewSmiteToolkit.Models
          */
 
         public string DeviceName { get; set; }  // item name
-        public Menuitem ItemDescription { get; set; }
-        public Menuitem SecondaryDescription { get; set; }
-        public List<Menuitem> Menuitems { get; set; }
+        public ItemDescription ItemDescription { get; set; }
         public string ItemId { get; set; }  
         public string ChildItemId { get; set; }     // item 1 tier below
         public string RootItemId { get; set; }      // base item
