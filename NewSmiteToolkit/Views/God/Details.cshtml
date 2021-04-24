@@ -91,31 +91,19 @@
         vertical-align: middle;
     }
 
+    .popover-title {
+        color: black;
+        font-weight: bold;
+    }
+
+    .popover-content {
+        color: black;
+    }
+
 </style>
 
 <br />
 <br />
-
-@*<div class="hidden">
-    <b>@a.Summary</b>: <br />
-    @a.Description.itemDescription.description <br />
-    MenuItems: <br />
-    @foreach (var m in a.Description.itemDescription.menuitems)
-    {
-        <div>
-            @m.description @m.value
-        </div>
-    }
-    RankItems: <br />
-    @foreach (var m in a.Description.itemDescription.rankitems)
-    {
-        <div>
-            @m.description @m.value
-        </div>
-    }
-    Cost: @a.Description.itemDescription.cost <br />
-    Cooldown: @a.Description.itemDescription.cooldown <br />
-</div>*@
 
 <div>
     <div class="container" style="text-align: center">
@@ -293,33 +281,35 @@
                 <div class="row" style="padding-left: 30px">
                     <div class="col-md-7 text-left">
                         <div class="row-no-gutters">
-                            <div class="text-center">
-                                <b>Passive</b>: @Model.Ability_5.Summary
+                            <div class="text-center" style="font-size: 1.75rem">
+                                - <b>Passive</b>: @Model.Ability_5.Summary -
+                                <hr />
                             </div>
-                            <br />
                             @Model.Ability_5.Description.itemDescription.description
                         </div>
-                        <hr />
-                        <div class="row">
-                            @foreach (var m in Model.Ability_5.Description.itemDescription.menuitems)
-                            {
-                                <div class="col-md-3">
-                                    <b>@m.description</b> @m.value
-                                </div>
-                            }
-                            @foreach (var m in Model.Ability_5.Description.itemDescription.rankitems)
-                            {
-                                <div class="col-md-3">
-                                    <b>@m.description</b> @m.value
-                                </div>
-                            }
-                        </div>
-
                     </div>
                     <div class="col-md-5">
                         <div style="padding-bottom: 10px">
+
+                            <!-- Content for Image Popover -->
+                            <div class="hidden" id="passivepopover">
+                                <div class="popover-heading">
+                                    @Model.Ability_5.Summary
+                                </div>
+                                <div class="popover-body">
+                                    @foreach (var m in Model.Ability_5.Description.itemDescription.menuitems)
+                                    {
+                                        <b>@m.description</b> @m.value<br />
+                                    }
+                                    @foreach (var m in Model.Ability_5.Description.itemDescription.rankitems)
+                                    {
+                                        <b>@m.description</b> @m.value<br />
+                                    }
+                                </div>
+                            </div>
+
                             <div style="padding-top: 5px; padding-bottom: 5px">
-                                <img src="@Model.Ability_5.URL" style="width: 120px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                                <img src="@Model.Ability_5.URL" class="popovers" data-toggle="popover" data-trigger="hover" data-popover-content="#passivepopover" data-placement="auto top" data-container="body" style="width: 120px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
                             </div>
                             <div>
                                 <b>Basic Attack</b>:
@@ -333,18 +323,37 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-
-                </div>
                 <hr />
                 <br />
                 <div class="row">
                     @{ int count = 1; }
                     @foreach (Ability a in Model.Abilities)
                     {
+                        string contentId = $"a{count}";
+
+                        <!-- Content for Image Popover -->
+                        <div class="hidden" id=@contentId>
+                            <div class="popover-heading">
+                                @a.Summary
+                            </div>
+                            <div class="popover-body">
+                                @a.Description.itemDescription.description <br />
+                                @foreach (var m in a.Description.itemDescription.menuitems)
+                                {
+                                    <b>@m.description</b> @m.value <br />
+                                }
+                                @foreach (var r in a.Description.itemDescription.rankitems)
+                                {
+                                    <b>@r.description</b> @r.value <br />
+                                }
+                                <b>Cooldown</b>: @a.Description.itemDescription.cooldown <br />
+                                <b>Cost</b>: @a.Description.itemDescription.cost
+                            </div>
+                        </div>
+
                         <div class="col-md-3">
                             <div style="padding-bottom: 10px; padding-top: 10px">
-                                <img src="@a.URL" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                                <img src="@a.URL" class="popovers" data-toggle="popover" data-trigger="hover" data-popover-content="#@contentId" data-placement="auto top" data-container="body" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
                             </div>
                             <b>Ability @(count++)</b><br />
                             @a.Summary

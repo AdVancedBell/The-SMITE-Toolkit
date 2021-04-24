@@ -1,5 +1,6 @@
-﻿@using NewSmiteToolkit.Models
-@using Newtonsoft.Json
+﻿@using NewSmiteToolkit.Models;
+@using NewSmiteToolkit.Utilities;
+@using Newtonsoft.Json;
 @model IEnumerable<MatchPlayer>
 
 @{
@@ -8,6 +9,8 @@
 
     List<MatchPlayer> team1 = Model.Where(p => p.taskForce.Equals("1")).ToList();
     List<MatchPlayer> team2 = Model.Where(p => p.taskForce.Equals("2")).ToList();
+
+    List<God> gods = GeneralUtils.GetGods();
 }
 
 <style>
@@ -33,144 +36,137 @@
     .team2{
         background-color: dodgerblue;
     }
+
+    th {
+        text-align: center;
+    }
+
+    .table > tbody > tr > td {
+        vertical-align: middle;
+    }
 </style>
 
-<h2>Success! Match Details</h2>
+<h2>Success! Here are Your Match's Details!</h2>
 <br />
+<div class="text-center">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="team-header team1" scope="colgroup" colspan="6">
+                    - Team 1 -
+                </th>
+            </tr>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    God Played
+                </th>
+                <th>
+                    Player Name
+                </th>
+                <th>
+                    Account Level
+                </th>
+                <th>
+                    Region
+                </th>
+                <th></th>
+            </tr>
+        </thead>
 
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th class="team-header team1" scope="colgroup" colspan="7">
-                Team 1
-            </th>
-        </tr>
+        <tbody>
+            @foreach (var item in team1)
+            {
+                <tr>
+                    <td>
+                        <img src="@(gods.First(g => g.Name.Equals(item.GodName)).godIcon_URL)" style="width: 40px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GodName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.playerName)
+                    </td>
+                    <td>
+                        @item.Account_Level
+                    </td>
+                    <td>
+                        @item.playerRegion
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "PlayerDetails", new { playerJson = JsonConvert.SerializeObject(item) })
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Account_Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GodName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rank_Stat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tier)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.playerCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.playerName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
+        <tfoot>
+            <tr>
+                <th class="team1 team-footer" colspan="7" scope="colgroup">
+                </th>
+            </tr>
+        </tfoot>
+    </table><br />
 
-    <tbody>
-        @foreach (var item in team1)
-        {
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="team2 team-header" scope="colgroup" colspan="6">
+                    - Team 2 -
+                </th>
+            </tr>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    God Played
+                </th>
+                <th>
+                    Player Name
+                </th>
+                <th>
+                    Account Level
+                </th>
+                <th>
+                    Region
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in team2)
+            {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Account_Level)
+                    <img src="@(gods.First(g => g.Name.Equals(item.GodName)).godIcon_URL)" style="width: 40px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.GodName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rank_Stat)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tier)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.playerCreated)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.playerName)
+                </td>
+                <td>
+                    @item.Account_Level
+                </td>
+                <td>
+                    @item.playerRegion
                 </td>
                 <td>
                     @Html.ActionLink("Details", "PlayerDetails", new { playerJson = JsonConvert.SerializeObject(item) })
                 </td>
             </tr>
-        }
-    </tbody>
+            }
+        </tbody>
 
-    <tfoot>
-        <tr>
-            <th class="team1 team-footer" colspan="7" scope="colgroup">
-            </th>
-        </tr>
-    </tfoot>
-</table>
-
-<br />
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th class="team2 team-header" scope="colgroup" colspan="7">
-                Team 2
-            </th>
-        </tr>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Account_Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GodName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rank_Stat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tier)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.playerCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.playerName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in team2)
-        {
+        <tfoot>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Account_Level)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GodName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rank_Stat)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tier)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.playerCreated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.playerName)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "PlayerDetails", new { playerJson = JsonConvert.SerializeObject(item) })
-                </td>
+                <th class="team2 team-footer" colspan="7" scope="colgroup">
+                </th>
             </tr>
-        }
-    </tbody>
+        </tfoot>
+    </table>
+</div>
 
-    <tfoot>
-        <tr>
-            <th class="team2 team-footer" colspan="7" scope="colgroup">
-            </th>
-        </tr>
-    </tfoot>
-</table>

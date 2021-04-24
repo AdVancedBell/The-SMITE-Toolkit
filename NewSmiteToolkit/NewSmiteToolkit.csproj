@@ -177,9 +177,11 @@
     <Compile Include="Constants\Portal.cs" />
     <Compile Include="Constants\SmiteFireGods.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\GodController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PlayerSearchController.cs" />
     <Compile Include="Controllers\SpyToolController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -187,6 +189,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\APISession.cs" />
     <Compile Include="Models\Credentials.cs" />
+    <Compile Include="Models\DetailPlayer.cs" />
     <Compile Include="Models\God.cs" />
     <Compile Include="Models\GodQueueStats.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -262,13 +265,15 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\Guides.cshtml" />
+    <Content Include="Views\PlayerSearch\Index.cshtml" />
     <Content Include="Views\God\Details.cshtml" />
     <Content Include="Views\God\Index.cshtml" />
     <Content Include="Views\SpyTool\Index.cshtml" />
     <Content Include="Views\SpyTool\PlayerDetails.cshtml" />
     <Content Include="Views\SpyTool\Results.cshtml" />
     <Content Include="webfontkit-20210423-021420.zip" />
+    <Content Include="Views\PlayerSearch\PlayerDetails.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

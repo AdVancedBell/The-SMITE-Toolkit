@@ -21,24 +21,27 @@ namespace NewSmiteToolkit.Controllers
         // GET: God
         public ActionResult Index()
         {
-            //var gods = from g in db.Gods
-            //           orderby g.Name
-            //           select g;
-
-            //string r = SpyToolUtils.GetRequestURI("getdataused", authParams: true);
-            //string s = SpyToolUtils.GetServerResponse(r);
-
-            //Debug.WriteLine($"  USAGE: {s}");
-
-            return View(GeneralUtils.GetGods());
+            try
+            {
+                return View(GeneralUtils.GetGods());
+            }
+            catch (Exception e)
+            {
+                return Redirect(Url.Action("Index", "Error", new { error = e.Message }));
+            }
         }
 
         //GET: God/Details/[id]
         public ActionResult Details(int id)
         {
-            //return View(db.Gods.FirstOrDefault(g => g.id == id));
-
-            return View(GeneralUtils.GetGods().FirstOrDefault(g => g.id == id));
+            try
+            {
+                return View(GeneralUtils.GetGods().FirstOrDefault(g => g.id == id));
+            }
+            catch (Exception e)
+            {
+                return Redirect(Url.Action("Index", "Error", new { error = e.Message }));
+            }
         }
 
         //used to quickly find max stats - Testing only

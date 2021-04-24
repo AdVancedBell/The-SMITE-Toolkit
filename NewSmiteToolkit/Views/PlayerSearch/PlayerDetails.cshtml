@@ -4,27 +4,14 @@
 @using Newtonsoft.Json
 @using Newtonsoft.Json.Linq
 
-@model NewSmiteToolkit.Models.MatchPlayer
+@model NewSmiteToolkit.Models.DetailPlayer
 
 @{
-    ViewBag.Title = "Spy Tool Player Details";
+    ViewBag.Title = "Player Search Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    //// TESTING ONLY : REMOVE ME
-    //if (Model.playerId == null)
-    //{
-    //    Model.playerName = "Go Mallardd";
-    //    Model.playerId = "709955972";
-    //    Model.GodName = "Athena";
-    //    Model.Queue = Gamemode.Joust.GetId();
-    //    Model.Account_Gods_Played = "x";
-    //    Model.Account_Level = "x";
-    //    Model.playerCreated = DateTime.Now.ToString();
-    //    Model.playerRegion = "x";
-    //}
-
     // get general stats
-    string requestURI = SpyToolUtils.GetRequestURI("getplayerachievements", authParams: true, parameters: Model.playerId);
+    string requestURI = SpyToolUtils.GetRequestURI("getplayerachievements", authParams: true, parameters: Model.Id);
     string serverResponse = SpyToolUtils.GetServerResponse(requestURI);
 
     JObject achievements = JObject.Parse(serverResponse);
@@ -45,7 +32,7 @@
     //var tmp = items[0].Menuitems[0].description;
 
     // get match history
-    requestURI = SpyToolUtils.GetRequestURI("getmatchhistory", authParams: true, parameters: Model.playerId);
+    requestURI = SpyToolUtils.GetRequestURI("getmatchhistory", authParams: true, parameters: Model.Id);
     serverResponse = SpyToolUtils.GetServerResponse(requestURI);
     List<Match> matches = JsonConvert.DeserializeObject<List<Match>>(serverResponse);
 
@@ -148,7 +135,10 @@
 
 
     // generate list of common items
-    List<Match> matchesPlayedWithCurrentGod = matches.Where(m => m.God.Equals(Model.GodName)).ToList();
+
+    var godname = "Athena";
+
+    List<Match> matchesPlayedWithCurrentGod = matches.Where(m => m.God.Equals(   godname   )).ToList();
     Dictionary<Item, double> commonItems = new Dictionary<Item, double>();
     foreach (var match in matchesPlayedWithCurrentGod)
     {
@@ -198,12 +188,6 @@
 
     // Get list of all gods
     List<God> gods = GeneralUtils.GetGods();
-
-    //get list of GodQueueStats
-    requestURI = SpyToolUtils.GetRequestURI("getqueuestats", true, Model.playerId, Model.Queue);
-    serverResponse = SpyToolUtils.GetServerResponse(requestURI);
-    List<GodQueueStats> godQueueStatList = JsonConvert.DeserializeObject<List<GodQueueStats>>(serverResponse);
-    godQueueStatList.OrderBy(s => s.Matches).ToList();
 }
 
 <style>
@@ -245,35 +229,35 @@
     }
 </style>
 
-<h2>Spying on @Model.playerName ... </h2>
+<h2>@ViewBag.Message Details!</h2>
 
 <div>
     <div class="container" style="text-align: center">
 
-        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#generalInfo" aria-expanded="false">
-            <b>@Model.playerName's General Info and Stats</b>
+        @*<button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#generalInfo" aria-expanded="false">
+            <b>@ViewBag.Message's General Info and Stats</b>
             <span style="vertical-align: middle">
                 <i class="glyphicon glyphicon-chevron-down"></i>
                 <i class="glyphicon glyphicon-chevron-up"></i>
             </span>
-        </button>
+        </button>*@
 
-        <div class="row collapse" id="generalInfo">
+        <div class="row" id="generalInfo" style="padding-right: 20px">
             <hr />
             <h4><b>- Basic Account Info -</b></h4>
             <hr />
             <div class="row">
                 <div class="col-md-3">
-                    <b>Account Level</b>: @Model.Account_Level
+                    <b>Account Level</b>: @Model.Level
                 </div>
                 <div class="col-md-3">
-                    <b>Account Created</b>: @DateTime.Parse(Model.playerCreated).ToShortDateString()
+                    <b>Account Created</b>: @DateTime.Parse(Model.Created_Datetime).ToShortDateString()
                 </div>
                 <div class="col-md-3">
-                    <b>Region</b>: @Model.playerRegion
+                    <b>Region</b>: @Model.Region
                 </div>
                 <div class="col-md-3">
-                    <b>Gods Mastered</b>: @Model.Account_Gods_Played
+                    <b>Gods Mastered</b>: @Model.MasteryLevel
                 </div>
             </div>
             <br />
@@ -413,139 +397,8 @@
 
         <hr />
 
-        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#commonItems" aria-expanded="false">
-            <b>@Model.playerName's Commonly Built Items on @Model.GodName</b>
-            <span style="vertical-align: middle">
-                <i class="glyphicon glyphicon-chevron-down"></i>
-                <i class="glyphicon glyphicon-chevron-up"></i>
-            </span>
-        </button>
-
-        <div class="row collapse" id="commonItems">
-            @{
-                int contentIdInt = 1;
-                double itemPercentage = 0;
-                string itemPercentageString = "";
-
-                List<KeyValuePair<Item, double>> commonItemsSorted = commonItems.ToList();
-                commonItemsSorted.Sort((a, b) => b.Value.CompareTo(a.Value));
-
-            }
-            <hr />
-            <h4><b>- Out of the last @matches.Count matches, @Model.playerName played @matchesPlayedWithCurrentGod.Count matches as @Model.GodName -</b></h4>
-            <hr />
-            @foreach (KeyValuePair<Item, double> kvp in commonItemsSorted)
-            {
-                Item i = kvp.Key;
-                string contentId = $"a{contentIdInt}";
-                itemPercentage = kvp.Value / matchesPlayedWithCurrentGod.Count;
-                itemPercentageString = String.Format(itemPercentage % 1 == 0 ? "{0:0}" : "{0:0.00}", itemPercentage * 100);
-
-                <!-- Content for Image Popover -->
-                <div class="hidden" id=@contentId>
-                    <div class="popover-heading">
-                        @i.DeviceName
-                    </div>
-                    <div class="popover-body">
-                        @i.ItemDescription.description
-                        <ul>
-                            @foreach (var m in i.ItemDescription.menuitems)
-                            {
-                                <li>
-                                    @m.description @m.value
-                                </li>
-                            }
-                        </ul>
-                        @i.ItemDescription.secondaryDescription
-                    </div>
-                </div>
-
-                <div class="col-md-4" style="padding-bottom:12px">
-                    <img src="@i.itemIcon_URL" class="popovers" data-toggle="popover" data-trigger="hover" data-popover-content="#@contentId" data-placement="auto top" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
-                    <br />
-                    -- @i.DeviceName --<br />
-                    - Built @itemPercentageString% of the time -
-                </div>
-
-                contentIdInt += 1;
-            }
-        </div>
-
-        <hr />
-
-        <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#queueStats" aria-expanded="false">
-            <b>@Model.playerName's God Stats in @((Gamemode)int.Parse(Model.Queue))</b>
-            <span style="vertical-align: middle">
-                <i class="glyphicon glyphicon-chevron-down"></i>
-                <i class="glyphicon glyphicon-chevron-up"></i>
-            </span>
-        </button>
-
-        <div class="row collapse" id="queueStats" style="padding-right: 30px">
-            <br />
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>God Name</th>
-                        <th>Wins</th>
-                        <th>Losses</th>
-                        <th>W/L</th>
-                        <th>Kills</th>
-                        <th>Deaths</th>
-                        <th>Assists</th>
-                        <th>K/D</th>
-                        <th>K/D/A</th>
-                        <th>Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var stat in godQueueStatList)
-                    {
-                        <tr>
-                            <td>
-                                <img src="@(gods.First(g => g.Name.Equals(stat.God)).godIcon_URL)" style="width: 40px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
-                            </td>
-                            <td>
-                                @stat.God
-                            </td>
-                            <td>
-                                @stat.Wins
-                            </td>
-                            <td>
-                                @stat.Losses
-                            </td>
-                            <td>
-                                @stat.wl_str
-                            </td>
-                            <td>
-                                @stat.Kills
-                            </td>
-                            <td>
-                                @stat.Deaths
-                            </td>
-                            <td>
-                                @stat.Assists
-                            </td>
-                            <td>
-                                @stat.kd_str
-                            </td>
-                            <td>
-                                @stat.kda_str
-                            </td>
-                            <td>
-                                @stat.Minutes minutes
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <hr />
-
         <button class="btn btn-warning btn-lg" data-toggle="collapse" data-target="#recentMatches" aria-expanded="false">
-            <b>@Model.playerName's @matches.Count Most Recent Matches</b>
+            <b>@ViewBag.Message's @matches.Count Most Recent Matches</b>
             <span style="vertical-align: middle">
                 <i class="glyphicon glyphicon-chevron-down"></i>
                 <i class="glyphicon glyphicon-chevron-up"></i>
@@ -554,85 +407,93 @@
 
         <div class="row collapse" id="recentMatches" style="padding-right: 30px; text-align:center">
             <br />
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>
 
-                        </th>
-                        <th>
-                            God Played
-                        </th>
-                        <th>
-                            K/D/A
-                        </th>
-                        <th>
-                            Player Damage
-                        </th>
-                        <th>
-                            Damage Taken
-                        </th>
-                        <th>
-                            Damage Mitigated
-                        </th>
-                        <th>
-                            Player Healing
-                        </th>
-                        <th>
-                            Self Healing
-                        </th>
-                        <th>
-                            Wards Placed
-                        </th>
-                        <th>
-                            Duration
-                        </th>
-                        <th>
-                            Result
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var match in matches)
-                    {
+            @if (matches.Count <= 0)
+            {
+                <div>Player has no recent matches!</div>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td>
-                                <img src="@(gods.First(g => g.Name.Replace("\'e", "E").Replace(" ", "_").Equals(match.God)).godIcon_URL)" style="width: 40px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
-                            </td>
-                            <td>
-                                @match.God.Replace('_', ' ').Replace("ChangE", "Chang'e")
-                            </td>
-                            <td>
-                                @match.Kills/@match.Deaths/@match.Assists
-                            </td>
-                            <td>
-                                @match.Damage
-                            </td>
-                            <td>
-                                @match.Damage_Taken
-                            </td>
-                            <td>
-                                @match.Damage_Mitigated
-                            </td>
-                            <td>
-                                @match.Healing
-                            </td>
-                            <td>
-                                @match.Healing_Player_Self
-                            </td>
-                            <td>
-                                @match.Wards_Placed
-                            </td>
-                            <td>
-                                @TimeSpan.FromSeconds(double.Parse(match.Time_In_Match_Seconds)).ToString(@"hh\:mm\:ss")
-                            </td>
-                            <td>
-                                @match.Win_Status
-                            </td>
+                            <th>
+
+                            </th>
+                            <th>
+                                God Played
+                            </th>
+                            <th>
+                                K/D/A
+                            </th>
+                            <th>
+                                Player Damage
+                            </th>
+                            <th>
+                                Damage Taken
+                            </th>
+                            <th>
+                                Damage Mitigated
+                            </th>
+                            <th>
+                                Player Healing
+                            </th>
+                            <th>
+                                Self Healing
+                            </th>
+                            <th>
+                                Wards Placed
+                            </th>
+                            <th>
+                                Duration
+                            </th>
+                            <th>
+                                Result
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var match in matches)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@(gods.First(g => g.Name.Replace("\'e", "E").Replace(" ", "_").Equals(match.God)).godIcon_URL)" style="width: 40px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                                </td>
+                                <td>
+                                    @match.God.Replace('_', ' ').Replace("ChangE", "Chang'e")
+                                </td>
+                                <td>
+                                    @match.Kills/@match.Deaths/@match.Assists
+                                </td>
+                                <td>
+                                    @match.Damage
+                                </td>
+                                <td>
+                                    @match.Damage_Taken
+                                </td>
+                                <td>
+                                    @match.Damage_Mitigated
+                                </td>
+                                <td>
+                                    @match.Healing
+                                </td>
+                                <td>
+                                    @match.Healing_Player_Self
+                                </td>
+                                <td>
+                                    @match.Wards_Placed
+                                </td>
+                                <td>
+                                    @TimeSpan.FromSeconds(double.Parse(match.Time_In_Match_Seconds)).ToString(@"hh\:mm\:ss")
+                                </td>
+                                <td>
+                                    @match.Win_Status
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </div>
     <br /><br />

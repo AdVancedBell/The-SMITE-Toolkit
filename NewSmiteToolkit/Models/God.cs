@@ -51,7 +51,7 @@ namespace NewSmiteToolkit.Models
     {
         public AbilityRoot Description { get; set; }
         public int Id { get; set; }
-        public string Summary { get; set; }
+        public string Summary { get; set; }         // Name of Ability
         public string URL { get; set; }
     }
 

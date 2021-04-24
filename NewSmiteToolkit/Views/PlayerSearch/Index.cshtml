@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "The SMITE Spy Tool!";
+    ViewBag.Title = "Player Search!";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,10 +14,9 @@
     Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
     Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
 </p>
-
 <br />
 
-<form action="~/SpyTool/Results" style="margin: 0 auto; text-align: center" >
+<form action="PlayerSearch/PlayerDetails" style="margin: 0 auto; text-align: center">
 
     <div class="form-group">
         <label for="username-input">Username:</label><br />
@@ -28,25 +27,13 @@
         <label for="platform-select">Platform:</label><br />
         <select class="form-control" id="platform-select" name="platform" style="color: black">
             <option selected disabled>--Please choose an option--</option>
-            <option>Steam</option>
+            <option>HiRez</option>
             <option>Xbox</option>
             <option>PSN</option>
+            <option>Switch</option>
+            <option>Steam</option>
+            <option>Epic</option>
         </select>
-    </div>
-
-    <div class="form-group">
-        <label for="gamemode-select">Gamemode:</label><br />
-        <select class="form-control" id="gamemode-select" name="gamemode" style="color: black">
-            <option selected disabled>--Please choose an option--</option>
-            <option>Conquest</option>
-            <option>Joust</option>
-            <option>Arena</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="minute-input">Current Time In Game (In Minutes):</label><br />
-        <input type="number" class="form-control" id="minute-input" name="minutesBehind" placeholder="Enter 0 if Game Just Began" style="color: black">
     </div>
 
     <br />
@@ -54,6 +41,3 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 
 </form>
-
-<br />
-
