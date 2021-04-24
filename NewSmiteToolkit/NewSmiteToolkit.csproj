@@ -175,6 +175,7 @@
     <Compile Include="Constants\LanguageCode.cs" />
     <Compile Include="Constants\LeagueTier.cs" />
     <Compile Include="Constants\Portal.cs" />
+    <Compile Include="Constants\SmiteFireGods.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GodController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Models\SessionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\GeneralUtils.cs" />
     <Compile Include="Utilities\SpyToolUtils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +268,7 @@
     <Content Include="Views\SpyTool\Index.cshtml" />
     <Content Include="Views\SpyTool\PlayerDetails.cshtml" />
     <Content Include="Views\SpyTool\Results.cshtml" />
+    <Content Include="webfontkit-20210423-021420.zip" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

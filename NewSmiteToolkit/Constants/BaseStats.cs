@@ -40,7 +40,12 @@ namespace NewSmiteToolkit
         public static double MinPhysPower => 76;                    // Bellona - not including characters with 0 physical power
         public static double MaxPhysPower => 96;                    // Hou Yi
         public static double RangePhysPower => MaxPhysPower - MinPhysPower;
-        public static double AveragePhysPower => 83.6033898305085;  
+        public static double AveragePhysPower => 83.6033898305085;
+
+        public static double MinMagicPower => 305;                    // Aphrodite - not including characters with 0 magical power
+        public static double MaxMagicPower => 415;                    // Ao Kuang
+        public static double RangeMagicPower => MaxMagicPower - MinMagicPower;
+        public static double AverageMagicPower => 331.203703703704;
 
         public static double MinAttackSpeed => 1;                   // Isis
         public static double MaxAttackSpeed => 1.48;                // Mercury

@@ -78,6 +78,9 @@ namespace NewSmiteToolkit.Models
         public double Lvl20PhysPower => PhysicalPower + (PhysicalPowerPerLevel * 20);
         public double PhysPowerBarPercentage => Lvl20PhysPower < BaseStats.MinPhysPower ? 0 : Math.Min(100, ((-2 * BaseStats.AveragePhysPower) + Lvl20PhysPower + BaseStats.MaxPhysPower) / BaseStats.RangePhysPower * 100);
 
+        public double Lvl20MagicPower => MagicalPower + (MagicalPowerPerLevel * 20);
+        public double MagicPowerBarPercentage => Lvl20MagicPower < BaseStats.MinMagicPower ? 0 : Math.Min(100, ((-2 * BaseStats.AverageMagicPower) + Lvl20MagicPower + BaseStats.MaxMagicPower) / BaseStats.RangeMagicPower * 100);
+
         public double Lvl20AttackSpeed => AttackSpeed + (AttackSpeedPerLevel * 20);
         public double AttackSpeedBarPercentage => Math.Min(100, ((-2 * BaseStats.AverageAttackSpeed) + Lvl20AttackSpeed + BaseStats.MaxAttackSpeed) / BaseStats.RangeAttackSpeed * 100);
 
@@ -118,6 +121,9 @@ namespace NewSmiteToolkit.Models
         [Display(Name = "Physical Power")]
         public Double PhysicalPower { get; set; }
         public Double PhysicalPowerPerLevel { get; set; }
+        [Display(Name = "Magical Power")]
+        public Double MagicalPower { get; set; }
+        public Double MagicalPowerPerLevel { get; set; }
         [Display(Name = "Attack Speed")]
         public Double AttackSpeed { get; set; }
         public Double AttackSpeedPerLevel { get; set; }
@@ -127,7 +133,15 @@ namespace NewSmiteToolkit.Models
         public Ability Ability_2 { get; set; }
         public Ability Ability_3 { get; set; }
         public Ability Ability_4 { get; set; }
-        public Ability Ability_5 { get; set; }
+        public Ability Ability_5 { get; set; }          // Passive
+
+        public List<Ability> Abilities
+        { 
+            get
+            {
+                return new List<Ability> { Ability_1, Ability_2, Ability_3, Ability_4, };
+            }
+        }
 
         public string OnFreeRotation { get; set; }
         public string ret_msg { get; set; }

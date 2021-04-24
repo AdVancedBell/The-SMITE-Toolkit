@@ -1,16 +1,14 @@
-﻿@model NewSmiteToolkit.Models.God
+﻿@using NewSmiteToolkit.Constants;
+@using NewSmiteToolkit.Models;
+
+@model NewSmiteToolkit.Models.God 
 
 @{
-    ViewBag.Title = "God Details";
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-
-    .barchart-table {
-        width: 50%;
-    }
-
+<style type="text/css">
     th {
         text-align: right;
     }
@@ -24,11 +22,11 @@
         text-align: right;
     }
 
-    .barchart-bar{
-        height: 0.75rem;
-        border-radius: 4px;
-        border: 1px solid #808080;
-        border-color: rgba(255,255,255,0.15);
+    .barchart-bar {
+        height: 1.25rem;
+        border-radius: 8px;
+        border: 2px solid #808080;
+        border-color: rgba(255,255,255,0.5);
     }
 
     .cell-barchart {
@@ -36,7 +34,7 @@
         min-width: 150px;
     }
 
-    .health-bar{
+    .health-bar {
         background-color: red;
     }
 
@@ -64,6 +62,10 @@
         background-color: purple;
     }
 
+    .magicpower-bar {
+        background-color: deepskyblue;
+    }
+
     .attackspeed-bar {
         background-color: lightsteelblue
     }
@@ -71,160 +73,306 @@
     .speed-bar {
         background-color: gold;
     }
+
+    button[aria-expanded=true] .glyphicon-chevron-down {
+        display: none;
+    }
+
+    button[aria-expanded=false] .glyphicon-chevron-up {
+        display: none;
+    }
+
+    .table > tbody > tr > td,
+    .table > tbody > tr > th {
+        border-top: none;
+    }
+
+    .table > tbody > tr > td {
+        vertical-align: middle;
+    }
+
 </style>
 
-<h2>@Model.Name</h2>
+<br />
+<br />
+
+@*<div class="hidden">
+    <b>@a.Summary</b>: <br />
+    @a.Description.itemDescription.description <br />
+    MenuItems: <br />
+    @foreach (var m in a.Description.itemDescription.menuitems)
+    {
+        <div>
+            @m.description @m.value
+        </div>
+    }
+    RankItems: <br />
+    @foreach (var m in a.Description.itemDescription.rankitems)
+    {
+        <div>
+            @m.description @m.value
+        </div>
+    }
+    Cost: @a.Description.itemDescription.cost <br />
+    Cooldown: @a.Description.itemDescription.cooldown <br />
+</div>*@
 
 <div>
-    <h4>@Model.Title</h4>
+    <div class="container" style="text-align: center">
+        <div class="row">
+            <div class="col-md-8">
+                <hr />
+                <h1>- @Model.Name -</h1>
+                <h4>@Model.Title</h4>
+                <hr />
 
-    <button class="btn btn-default" data-toggle="collapse" data-target="#lore">Show Lore &raquo;</button>
+                <div class="row">
+                    <div class="col-md-3">
+                        <u><b>Pantheon</b></u>
+                        <br />@Model.Pantheon
+                    </div>
+                    <div class="col-md-3">
+                        <u><b>Type</b></u>
+                        <br />@Model.Type
+                    </div>
+                    <div class="col-md-3">
+                        <u><b>Roles</b></u>
+                        <br />@Model.Roles
+                    </div>
+                    <div class="col-md-3">
+                        <u><b>Pros</b></u>
+                        <br />@Model.Pros
+                    </div>
+                </div>
+                <br />
+                <div class="row" style="padding-bottom: 10px">
+                    <button class="btn btn-warning" data-toggle="collapse" data-target="#lore" aria-expanded="false">
+                        <b>Show Lore</b> &nbsp;
+                        <span style="vertical-align: middle">
+                            <i class="glyphicon glyphicon-chevron-down"></i>
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img src="@Model.godCard_URL" style="width: 240px; height: 240px; object-fit: cover; object-position:40% 0%; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+            </div>
+        </div>
+        <hr />
+        <div class="row collapse" id="lore" style="padding-right: 30px">
+            @Html.Raw(Model.FormattedLore)
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="padding-right: 30px">
+                <h4><b>- @Model.Name's Stats -</b></h4>
+                <hr />
 
-    <div id="lore" class="collapse">
-        @Html.Raw(Model.FormattedLore)
+                <table class="table barchart-table">
+                    <tr>
+                        <td><b>@Html.DisplayNameFor(model => model.Health)</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.HealthBarPercentage%;" class="barchart-bar health-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Health) (+@Html.DisplayFor(model => model.HealthPerLevel))
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>@Html.DisplayNameFor(model => model.HealthPerFive)</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.HP5BarPercentage%;" class="barchart-bar hp5-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.HealthPerFive) (+@Html.DisplayFor(model => model.HP5PerLevel))
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>@Html.DisplayNameFor(model => model.Mana)</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.ManaBarPercentage%;" class="barchart-bar mana-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Mana) (+@Html.DisplayFor(model => model.ManaPerLevel))
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>MP5</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.MP5BarPercentage%;" class="barchart-bar mp5-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ManaPerFive) (+@Html.DisplayFor(model => model.MP5PerLevel))
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>Physical<br />Protection</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.PhysProtBarPercentage%;" class="barchart-bar physprot-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.PhysicalProtection) (+@Html.DisplayFor(model => model.PhysicalProtectionPerLevel))
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+                        <td><b>Magical<br />Protection</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:50%;" class="barchart-bar magicprot-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.MagicProtection) (+@Html.DisplayFor(model => model.MagicProtectionPerLevel))
+                        </td>
+
+                    </tr>
+
+                    @if (Model.PhysicalPower > 0)
+                    {
+                        <tr>
+                            <td><b>Physical<br />Power</b></td>
+                            <td class="cell-barchart">
+                                <div style="width:@Model.PhysPowerBarPercentage%;" class="barchart-bar physpower-bar"></div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.PhysicalPower) (+@Html.DisplayFor(model => model.PhysicalPowerPerLevel))
+                            </td>
+
+                        </tr>
+                    }
+                    @if (Model.MagicalPower > 0)
+                    {
+                        <tr>
+                            <td><b>Magical<br />Power</b></td>
+                            <td class="cell-barchart">
+                                <div style="width:@Model.MagicPowerBarPercentage%;" class="barchart-bar magicpower-bar"></div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.MagicalPower) (+@Html.DisplayFor(model => model.MagicalPowerPerLevel))
+                            </td>
+
+                        </tr>
+                    }
+
+                    <tr>
+                        <td><b>Attack<br />Speed</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.AttackSpeedBarPercentage%;" class="barchart-bar attackspeed-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.AttackSpeed) (+@Html.DisplayFor(model => model.AttackSpeedPerLevel))
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td><b>@Html.DisplayNameFor(model => model.Speed)</b></td>
+                        <td class="cell-barchart">
+                            <div style="width:@Model.SpeedBarPercentage%;" class="barchart-bar speed-bar"></div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Speed) (+0)
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-8">
+                <h4><b>- @Model.Name's Abilities -</b></h4>
+                <hr />
+                <div class="row" style="padding-left: 30px">
+                    <div class="col-md-7 text-left">
+                        <div class="row-no-gutters">
+                            <div class="text-center">
+                                <b>Passive</b>: @Model.Ability_5.Summary
+                            </div>
+                            <br />
+                            @Model.Ability_5.Description.itemDescription.description
+                        </div>
+                        <hr />
+                        <div class="row">
+                            @foreach (var m in Model.Ability_5.Description.itemDescription.menuitems)
+                            {
+                                <div class="col-md-3">
+                                    <b>@m.description</b> @m.value
+                                </div>
+                            }
+                            @foreach (var m in Model.Ability_5.Description.itemDescription.rankitems)
+                            {
+                                <div class="col-md-3">
+                                    <b>@m.description</b> @m.value
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div style="padding-bottom: 10px">
+                            <div style="padding-top: 5px; padding-bottom: 5px">
+                                <img src="@Model.Ability_5.URL" style="width: 120px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                            </div>
+                            <div>
+                                <b>Basic Attack</b>:
+                                @foreach (var m in Model.basicAttack.itemDescription.menuitems)
+                                {
+                                    <div>
+                                        @m.description @m.value
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+                <hr />
+                <br />
+                <div class="row">
+                    @{ int count = 1; }
+                    @foreach (Ability a in Model.Abilities)
+                    {
+                        <div class="col-md-3">
+                            <div style="padding-bottom: 10px; padding-top: 10px">
+                                <img src="@a.URL" style="width: 100px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
+                            </div>
+                            <b>Ability @(count++)</b><br />
+                            @a.Summary
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <hr />
+        <div class="row" style="padding-right: 30px">
+            <div class="row" style="padding-bottom: 10px">
+                <button class="btn btn-warning" data-toggle="collapse" data-target="#smitefire" aria-expanded="false" style="width: 90%">
+                    <b>Click Here to View @Model.Name's Guides and Buids on Smitefire</b> &nbsp;
+                    <span style="vertical-align: middle">
+                        <i class="glyphicon glyphicon-chevron-down"></i>
+                        <i class="glyphicon glyphicon-chevron-up"></i>
+                    </span>
+                </button>
+            </div>
+            <div id="smitefire" class="collapse">
+                <div class="embed-responsive embed-responsive-16by9" style="border: 2px solid rgba(255, 255, 255, 0.5); border-radius: 5px">
+                    <iframe class="embed-responsive-item" src="https://www.smitefire.com/smite/god/@(Model.Name.Replace("\'", "").Replace(' ', '-').ToLower())-@(SmiteFireGods.Ids[Model.Name])" allowfullscreen></iframe>
+                </div>
+                <hr />
+            </div>
+        </div>
     </div>
-
-    <hr />
-
-    <table>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Pantheon)
-            </th>
-
-            <td class="cell-barchart">
-                @Html.DisplayFor(model => model.Pantheon)
-            </td>
-        </tr>
-
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-
-            <td>
-                @Html.DisplayFor(model => model.Type)
-            </td>
-        </tr>
-
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Roles)
-            </th>
-
-            <td>
-                @Html.DisplayFor(model => model.Roles)
-            </td>
-        </tr>
-
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Pros)
-            </th>
-
-            <td>
-                @Html.DisplayFor(model => model.Pros)
-            </td>
-        </tr>
-
-    </table>
-
-    <hr />
-
-    <table class="barchart-table">
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Health)</th>
-            <td>
-                @Html.DisplayFor(model => model.Health) (+@Html.DisplayFor(model => model.HealthPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.HealthBarPercentage%;" class="barchart-bar health-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.HealthPerFive)</th>
-            <td>
-                @Html.DisplayFor(model => model.HealthPerFive) (+@Html.DisplayFor(model => model.HP5PerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.HP5BarPercentage%;" class="barchart-bar hp5-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Mana)</th>
-            <td>
-                @Html.DisplayFor(model => model.Mana) (+@Html.DisplayFor(model => model.ManaPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.ManaBarPercentage%;" class="barchart-bar mana-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.ManaPerFive)</th>
-            <td>
-                @Html.DisplayFor(model => model.ManaPerFive) (+@Html.DisplayFor(model => model.MP5PerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.MP5BarPercentage%;" class="barchart-bar mp5-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.PhysicalProtection)</th>
-            <td>
-                @Html.DisplayFor(model => model.PhysicalProtection) (+@Html.DisplayFor(model => model.PhysicalProtectionPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.PhysProtBarPercentage%;" class="barchart-bar physprot-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.MagicProtection)</th>
-            <td>
-                @Html.DisplayFor(model => model.MagicProtection) (+@Html.DisplayFor(model => model.MagicProtectionPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:50%;" class="barchart-bar magicprot-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.PhysicalPower)</th>
-            <td>
-                @Html.DisplayFor(model => model.PhysicalPower) (+@Html.DisplayFor(model => model.PhysicalPowerPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.PhysPowerBarPercentage%;" class="barchart-bar physpower-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.AttackSpeed)</th>
-            <td>
-                @Html.DisplayFor(model => model.AttackSpeed) (+@Html.DisplayFor(model => model.AttackSpeedPerLevel))
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.AttackSpeedBarPercentage%;" class="barchart-bar attackspeed-bar"></div>
-            </td>
-        </tr>
-
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Speed)</th>
-            <td>
-                @Html.DisplayFor(model => model.Speed) (+0)
-            </td>
-            <td class="cell-barchart">
-                <div style="width:@Model.SpeedBarPercentage%;" class="barchart-bar speed-bar"></div>
-            </td>
-        </tr>
-
-    </table>
-
+    <br />
+    <br />
 </div>
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>

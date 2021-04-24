@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using NewSmiteToolkit.Utilities;
+using NewSmiteToolkit.Constants;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -14,26 +16,32 @@ namespace NewSmiteToolkit.Controllers
     public class GodController : Controller
     {
 
-        private GodsDBContext db = new GodsDBContext();
+        //private GodsDBContext db = new GodsDBContext();
 
         // GET: God
         public ActionResult Index()
         {
-            var gods = from g in db.Gods
-                       orderby g.Name
-                       select g;
-            return View(gods);
+            //var gods = from g in db.Gods
+            //           orderby g.Name
+            //           select g;
+
+            //string r = SpyToolUtils.GetRequestURI("getdataused", authParams: true);
+            //string s = SpyToolUtils.GetServerResponse(r);
+
+            //Debug.WriteLine($"  USAGE: {s}");
+
+            return View(GeneralUtils.GetGods());
         }
 
         //GET: God/Details/[id]
         public ActionResult Details(int id)
         {
-            //AvgStats("Mana", g => g.Mana, g => g.ManaPerLevel);
+            //return View(db.Gods.FirstOrDefault(g => g.id == id));
 
-            return View(db.Gods.FirstOrDefault(g => g.id == id));
+            return View(GeneralUtils.GetGods().FirstOrDefault(g => g.id == id));
         }
 
-        //used to quickly find max stats
+        //used to quickly find max stats - Testing only
         [NonAction]
         public void MaxMinStats(string attribute, Func<God, double> f1, Func<God, double> f2)
         {
@@ -42,7 +50,7 @@ namespace NewSmiteToolkit.Controllers
             God bestgod = null;
             God worstgod = null;
 
-            foreach (var god in db.Gods)
+            foreach (var god in GeneralUtils.GetGods())
             {
                 double lvl20stat = f1(god) + (f2(god) * 20);
 
@@ -70,8 +78,12 @@ namespace NewSmiteToolkit.Controllers
             double sum = 0;
             double count = 0;
 
-            foreach (var god in db.Gods)
+            foreach (var god in GeneralUtils.GetGods())
             {
+                if (f1(god) == 0)
+                {
+                    continue;
+                }
                 // add condition if some gods should not be considered
                 sum += (f1(god) + (f2(god) * 20));
                 count++;
