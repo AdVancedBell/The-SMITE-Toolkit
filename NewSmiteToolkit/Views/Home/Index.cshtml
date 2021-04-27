@@ -1,45 +1,67 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "The SMITE Toolkit";
 }
 
-    <div class="well-lg" style="color: black; background-color: rgb(157, 157, 157) ; margin-top: 10px">
-        <h1>The SMITE Toolkit</h1>
-        <p class="lead">
-            The SMITE Toolkit is a collection of powerful tools designed to give you the upper-hand in battle and provide the newest and hottest builds and
-            guides so that you can crush the competition!
-        </p>
-        <p><a href="https://www.smitegame.com/" class="btn btn-primary btn-lg">Learn more about SMITE! &raquo;</a></p>
-    </div>
+<br />
+
+<h1 class="text-center">Welcome to The SMITE Toolkit!</h1>
+
+<hr />
+
+
+<div class="well-lg text-center" style="        color: black;
+        background-color: rgb(127, 127, 127);
+        margin-top: 10px;
+        border: 3px solid rgba(255, 255, 255, 0.25)">
+    <p class="lead">
+        The SMITE Toolkit provides you with a collection of powerful tools that give you the upper-hand in battle!<br />
+        <br />
+        The SMITE Toolkit is for players new and old &ndash; with tools that help newer players learn SMITE and tools that help experienced players master the game!
+    </p>
+
+    <br />
+
+    <p><a href="https://www.smitegame.com/" class="btn btn-primary btn-lg">Learn more about SMITE! &raquo;</a></p>
+</div>
+
+<br />
+<hr />
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Detailed Information</h2>
+        <h2>SMITE's Playable Characters!</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
-            ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
-            Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
-            Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
+            The SMITE Toolkit provides detailed information about every god and ability in the game! This information includes lore about your favorite characters, 
+            example guides and builds to help you learn new characters, and stat bars that help you see exactly where a character shines!
         </p>
-        <p><a class="btn btn-default" href="@Url.Action("Index", "God")">Check It Out! &raquo;</a></p>
     </div>
     <div class="col-md-4">
         <h2>The SMITE Spy Tool</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
-            ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
-            Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
-            Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
+            The SMITE Spy Tool is tool that is unique to The SMITE Toolkit! With this tool, you can run a real-time analysis of your current match and view detailed
+            statistics and other useful information about your opponents and teammates! This information varies from general statistics such as K/D ratio and account level to 
+            very specific statistics like the percentage of items built on their specific character!
         </p>
-        <p><a class="btn btn-default" href="@Url.Action("Index", "SpyTool")">Check It Out! &raquo;</a></p>
     </div>
     <div class="col-md-4">
         <h2>Player Search Tool</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
-            ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
-            Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
-            Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
+            The Player Search Tool allows you to look up SMITE players' accounts to view details and statitics about them! You can use this tool to track your recent performance statistics or 
+            maybe even to see how you stack up against your friends and your favorite SMITE Pro League players! 
         </p>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-4">
+        <p><a class="btn btn-default" href="@Url.Action("Index", "God")">Check It Out! &raquo;</a></p>
+    </div>
+    <div class="col-xs-4">
+        <p><a class="btn btn-default" href="@Url.Action("Index", "SpyTool")">Check It Out! &raquo;</a></p>
+    </div>
+    <div class="col-xs-4">
         <p><a class="btn btn-default" href="@Url.Action("Index", "PlayerSearch")">Check It Out! &raquo;</a></p>
     </div>
 </div>
+
+    <br /><br />

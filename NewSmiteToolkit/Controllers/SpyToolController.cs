@@ -22,7 +22,7 @@ namespace NewSmiteToolkit.Controllers
             return View();
         }
 
-        [OutputCache(Duration = 300, VaryByParam = "username")]
+        [OutputCache(Duration = 300, VaryByParam = "*")]
         public ActionResult Results(string username, string platform, string gamemode, string minutesBehind)
         {
             // TEMP vvv

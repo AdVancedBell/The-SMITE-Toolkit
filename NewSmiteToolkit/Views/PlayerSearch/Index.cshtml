@@ -4,19 +4,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
-
 <br />
 
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
-    ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
-    Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
-    Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
-</p>
-<br />
+<h1 class="text-center">Welcome to the Player Search tool!</h1>
 
-<form action="PlayerSearch/PlayerDetails" style="margin: 0 auto; text-align: center">
+<hr />
+
+<div class="text-center">
+    The Player Search tool can be used to find useful and interesting information on yourself or other players!<br />
+    Simply enter the username and platform of the player that you'd like to search for and hit submit!
+    <br /><br />
+    NOTE: If you play on PC and are unsure of your platform, most of the time the platform will be 'HiRez', even if you play on Steam.
+    <br />
+    NOTE: This tool will not be able to view data for players with private accounts.
+    <br />
+    NOTE: The 'recent match' table may not fit properly on small devices.
+
+</div>
+
+<hr />
+
+<form action="~/PlayerSearch/PlayerDetails" style="margin: 0 auto; text-align: center">
 
     <div class="form-group">
         <label for="username-input">Username:</label><br />

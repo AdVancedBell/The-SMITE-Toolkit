@@ -312,12 +312,21 @@
                                 <img src="@Model.Ability_5.URL" class="popovers" data-toggle="popover" data-trigger="hover" data-popover-content="#passivepopover" data-placement="auto top" data-container="body" style="width: 120px; height: auto; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 10px" />
                             </div>
                             <div>
-                                <b>Basic Attack</b>:
-                                @foreach (var m in Model.basicAttack.itemDescription.menuitems)
+                                <b>Basic Attack</b>
+                                @if (Model.basicAttack == null)
                                 {
                                     <div>
-                                        @m.description @m.value
+                                        Undefined
                                     </div>
+                                }
+                                else
+                                {
+                                    foreach (var m in Model.basicAttack.itemDescription.menuitems)
+                                    {
+                                        <div>
+                                            @m.description @m.value
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>

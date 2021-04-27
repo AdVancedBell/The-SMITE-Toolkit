@@ -32,7 +32,7 @@ namespace NewSmiteToolkit.Controllers
         }
 
         //GET: God/Details/[id]
-        public ActionResult Details(int id)
+        public ActionResult Details(int id = 3492)
         {
             try
             {

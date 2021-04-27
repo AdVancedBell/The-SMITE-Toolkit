@@ -4,20 +4,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
-
 <br />
 
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nec nisi lectus. Fusce vulputate, orci ac convallis tristique, ex nisi laoreet arcu,
-    ac efficitur sapien dui id ante. Proin fringilla sem ac arcu lacinia consequat. Sed augue diam, facilisis a molestie eu, venenatis sed tortor. Duis vel posuere arcu.
-    Sed vehicula justo id porttitor egestas. Aliquam vitae dolor ullamcorper, varius sem sit amet, commodo enim. Aliquam bibendum odio eu tellus commodo interdum.
-    Vestibulum ultricies mauris massa, eget luctus diam facilisis at.
-</p>
+<h1 class="text-center">Welcome to the SMITE Spy Tool!</h1>
 
-<br />
+<hr />
 
-<form action="~/SpyTool/Results" style="margin: 0 auto; text-align: center" >
+<div class="text-center">
+    The Smite Spy tool is designed to be used in-game to provide real-time analysis of your teammates and opponents!<br />
+    Simply enter your username and platform, the gamemode you are playing, and the time since the match started and hit submit!
+    <br /><br />
+    NOTE: If you play on PC and are unsure of your platform, most of the time the platform will be 'HiRez', even if you play on Steam.
+    <br />
+    NOTE: The 'time since match started' is the time since your match began, NOT the time shown on the in-game clock.
+    <br />
+    NOTE: This tool will not be able to view data for players with private accounts.
+    <br />
+    NOTE: The 'recent match' table may not fit properly on some small devices.
+</div>
+
+<hr />
+
+<form action="~/SpyTool/Results" style="margin: 0 auto; text-align: center">
 
     <div class="form-group">
         <label for="username-input">Username:</label><br />
@@ -28,9 +36,12 @@
         <label for="platform-select">Platform:</label><br />
         <select class="form-control" id="platform-select" name="platform" style="color: black">
             <option selected disabled>--Please choose an option--</option>
-            <option>Steam</option>
+            <option>HiRez</option>
             <option>Xbox</option>
             <option>PSN</option>
+            <option>Switch</option>
+            <option>Steam</option>
+            <option>Epic</option>
         </select>
     </div>
 
@@ -41,11 +52,14 @@
             <option>Conquest</option>
             <option>Joust</option>
             <option>Arena</option>
+            <option>Assault</option>
+            <option>Clash</option>
+            <option>MOTD</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="minute-input">Current Time In Game (In Minutes):</label><br />
+        <label for="minute-input">Time Since Match Started (In Minutes):</label><br />
         <input type="number" class="form-control" id="minute-input" name="minutesBehind" placeholder="Enter 0 if Game Just Began" style="color: black">
     </div>
 

@@ -20,13 +20,6 @@ namespace NewSmiteToolkit.Controllers
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-
         public ActionResult Guides()
         {
             ViewBag.Message = "New and Popular Guide for you favorite characters!";
