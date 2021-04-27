@@ -1,5 +1,7 @@
 # The SMITE Toolkit
 
+Available at http://thesmitetoolkit.com
+
 The SMITE Toolkit was created by Christopher Newport University student, Andrew Bell, for his senior capstone project.<br />
 The website was created with one simple goal -- provide the SMITE gaming community with tools and data that help players improve their own gameplay!  
 
