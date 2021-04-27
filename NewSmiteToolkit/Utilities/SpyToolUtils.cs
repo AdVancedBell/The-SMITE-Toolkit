@@ -117,11 +117,16 @@ namespace NewSmiteToolkit.Utilities
             return sessionInfo;
         }
 
-        public static Player GetPlayer(string portalId, string gamertag)
+        public static DetailPlayer GetPlayer(string portalId, string gamertag)
         {
-            string requestURI = GetRequestURI("getplayeridsbygamertag", authParams: true, portalId, gamertag);
-            string serverResponse = GetServerResponse(requestURI);
-            List<Player> player = JsonConvert.DeserializeObject<List<Player>>(serverResponse);
+            //string requestURI = GetRequestURI("getplayeridsbygamertag", authParams: true, portalId, gamertag);
+            //string serverResponse = GetServerResponse(requestURI);
+            //List<Player> player = JsonConvert.DeserializeObject<List<Player>>(serverResponse);
+
+            string requestURI = SpyToolUtils.GetRequestURI("getplayer", authParams: true, gamertag, portalId);
+            string responseFromServer = SpyToolUtils.GetServerResponse(requestURI);
+
+            List<DetailPlayer> player = JsonConvert.DeserializeObject<List<DetailPlayer>>(responseFromServer);
 
             return player.FirstOrDefault();
         }

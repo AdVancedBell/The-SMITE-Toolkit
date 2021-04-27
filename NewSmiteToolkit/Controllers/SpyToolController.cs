@@ -22,7 +22,7 @@ namespace NewSmiteToolkit.Controllers
             return View();
         }
 
-        [OutputCache(Duration = 300, VaryByParam = "*")]
+        [OutputCache(Duration = 600, VaryByParam = "*")]
         public ActionResult Results(string username, string platform, string gamemode, string minutesBehind)
         {
             // TEMP vvv
@@ -83,11 +83,12 @@ namespace NewSmiteToolkit.Controllers
                 // Find Player from username/portal input
                 Portal portal;
                 Enum.TryParse<Portal>(platform, out portal);
-                Player player = SpyToolUtils.GetPlayer(portal.GetId(), username);
-                Debug.WriteLine($"\n  Username: {username}\n  Player ID: {player.player_id}");
+                //Player player = SpyToolUtils.GetPlayer(portal.GetId(), username);
+                DetailPlayer player = SpyToolUtils.GetPlayer(portal.GetId(), username);
+                Debug.WriteLine($"\n  Username: {username}\n  Player ID: {player.Id}");
 
                 // TEMP vvv
-                string id = player.player_id;
+                string id = player.Id;
                 ViewBag.Message = JsonConvert.SerializeObject(new { username, id });
                 // TEMP ^^^
 
@@ -97,7 +98,7 @@ namespace NewSmiteToolkit.Controllers
                 List<string> activeMatchIds = SpyToolUtils.GetActiveMatchIds(mode, minutesSinceMatchStart: int.Parse(minutesBehind));
 
                 // Find match that Player is in
-                string matchId = SpyToolUtils.FindMatchIdByPlayerId(player.player_id, activeMatchIds);
+                string matchId = SpyToolUtils.FindMatchIdByPlayerId(player.Id, activeMatchIds);
 
                 if (matchId == null)
                 {
