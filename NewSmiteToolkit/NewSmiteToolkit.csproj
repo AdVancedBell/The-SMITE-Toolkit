@@ -220,6 +220,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Class_Diagrams\GodAbilityCD.cd" />
     <Content Include="connections.config" />
+    <Content Include="Class_Diagrams\ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\TheSmiteToolkit.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
